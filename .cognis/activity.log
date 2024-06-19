@@ -1,1 +1,2 @@
 2024-06-08T11:35:25  chore: BLACKBOOK redaction pass
+2024-06-19T18:52:32  perf(rules): load rules lazily for faster startup
