@@ -2,3 +2,4 @@
 2024-06-19T18:52:32  perf(rules): load rules lazily for faster startup
 2024-07-18T13:09:39  test(report): clarify the README quickstart
 2024-07-30T08:26:46  ci(tests): trim whitespace in parsed fields
+2024-08-28T15:43:53  docs(core): tune severity weights
