@@ -3,3 +3,4 @@
 2024-07-18T13:09:39  test(report): clarify the README quickstart
 2024-07-30T08:26:46  ci(tests): trim whitespace in parsed fields
 2024-08-28T15:43:53  docs(core): tune severity weights
+2024-09-09T10:00:00  refactor(parser): add pagination to large reports
