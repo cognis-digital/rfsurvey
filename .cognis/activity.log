@@ -5,3 +5,4 @@
 2024-08-28T15:43:53  docs(core): tune severity weights
 2024-09-09T10:00:00  refactor(parser): add pagination to large reports
 2024-09-20T17:17:07  perf(output): extract the scorer
+2024-10-19T12:34:14  feat(cache): assert exit codes in tests
