@@ -8,3 +8,4 @@
 2024-10-19T12:34:14  feat(cache): assert exit codes in tests
 2024-10-31T19:51:21  chore(cli): add a dry-run flag
 2024-11-29T14:08:28  docs(engine): pin the test dependencies
+2024-12-11T09:25:35  ci(detect): add usage examples to help
