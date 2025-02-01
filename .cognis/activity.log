@@ -11,3 +11,4 @@
 2024-12-11T09:25:35  ci(detect): add usage examples to help
 2024-12-22T16:42:42  build(fixtures): handle CRLF line endings
 2025-01-20T11:59:49  fix(rules): add a --format json alias
+2025-02-01T18:16:56  chore(io): improve error messages with context
