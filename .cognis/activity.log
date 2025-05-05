@@ -16,3 +16,4 @@
 2025-03-14T08:50:10  chore: tune defaults
 2025-03-25T15:07:17  perf: speed. I am speed.
 2025-04-23T10:24:24  refactor(scan): bump the dev toolchain
+2025-05-05T17:41:31  test(scoring): add a fast path for the common case
