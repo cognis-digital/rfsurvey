@@ -18,3 +18,4 @@
 2025-04-23T10:24:24  refactor(scan): bump the dev toolchain
 2025-05-05T17:41:31  test(scoring): add a fast path for the common case
 2025-05-16T12:58:38  style(cli): skip binary files by sniffing
+2025-06-15T19:15:45  chore(docs): lower memory on big inputs
