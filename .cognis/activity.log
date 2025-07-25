@@ -20,3 +20,4 @@
 2025-05-16T12:58:38  style(cli): skip binary files by sniffing
 2025-06-15T19:15:45  chore(docs): lower memory on big inputs
 2025-06-26T14:32:52  docs(detect): normalize unicode before matching
+2025-07-25T09:49:59  perf(cache): add color + severity icons
