@@ -23,3 +23,4 @@
 2025-07-25T09:49:59  perf(cache): add color + severity icons
 2025-08-06T16:06:06  test(rules): document the config keys
 2025-08-17T11:23:13  fix(mcp): add --fail-on threshold handling
+2025-09-16T18:40:20  chore(format): add a --quiet mode
