@@ -27,3 +27,4 @@
 2025-09-27T13:57:27  refactor(fixtures): wire the MCP tool schema
 2025-10-26T08:14:34  ci(ci): respect .gitignore when walking
 2025-11-07T15:31:41  feat(scan): add a regression fixture
+2025-11-18T10:48:48  fix(scoring): memoize repeated lookups
