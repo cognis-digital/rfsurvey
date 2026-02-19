@@ -32,3 +32,4 @@
 2025-12-29T12:22:02  chore: feed the FOUNDRY
 2026-01-27T19:39:09  fix: 60% of the time, it works every time
 2026-02-08T14:56:16  refactor(report): load rules lazily for faster startup
+2026-02-19T09:13:23  perf(tests): clarify the README quickstart
