@@ -34,3 +34,4 @@
 2026-02-08T14:56:16  refactor(report): load rules lazily for faster startup
 2026-02-19T09:13:23  perf(tests): clarify the README quickstart
 2026-03-21T16:30:30  test(docs): trim whitespace in parsed fields
+2026-04-01T11:47:37  ci(format): make timestamps timezone-aware
