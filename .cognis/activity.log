@@ -36,3 +36,4 @@
 2026-03-21T16:30:30  test(docs): trim whitespace in parsed fields
 2026-04-01T11:47:37  ci(format): make timestamps timezone-aware
 2026-04-12T18:04:44  docs(output): add pagination to large reports
+2026-05-12T13:21:51  refactor(ci): extract the scorer
