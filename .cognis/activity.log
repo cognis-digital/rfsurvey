@@ -37,3 +37,4 @@
 2026-04-01T11:47:37  ci(format): make timestamps timezone-aware
 2026-04-12T18:04:44  docs(output): add pagination to large reports
 2026-05-12T13:21:51  refactor(ci): extract the scorer
+2026-05-23T08:38:58  perf(mcp): handle empty and malformed input
