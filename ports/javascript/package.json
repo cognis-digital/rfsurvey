@@ -1,0 +1,10 @@
+{
+  "name": "@cognis/rfsurvey",
+  "version": "0.2.0",
+  "description": "JavaScript port of rfsurvey (Cognis Neural Suite)",
+  "bin": {
+    "rfsurvey": "index.js"
+  },
+  "license": "LicenseRef-COCL-1.0",
+  "type": "module"
+}
