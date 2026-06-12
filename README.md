@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-rfsurvey
+pip install "git+https://github.com/cognis-digital/rfsurvey.git"
 rfsurvey scan .            # → prioritized findings in seconds
 ```
 
@@ -50,7 +50,7 @@ Analyze RF spectrum-occupancy CSV/metadata for band usage, interference, and ano
 ## Quick start
 
 ```bash
-pip install cognis-rfsurvey
+pip install "git+https://github.com/cognis-digital/rfsurvey.git"
 rfsurvey --version
 rfsurvey scan .                       # scan current project
 rfsurvey scan . --format json         # machine-readable

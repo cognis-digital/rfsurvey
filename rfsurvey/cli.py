@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import asdict
 from typing import Optional
 
 from . import TOOL_NAME, TOOL_VERSION
