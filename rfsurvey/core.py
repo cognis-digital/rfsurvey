@@ -18,7 +18,7 @@ import csv
 import io
 import math
 from dataclasses import dataclass, field, asdict
-from typing import Iterable, Optional
+from typing import Optional
 
 
 # --- Named RF bands (Hz). Coarse, well-known allocations for labeling. ------
