@@ -20,6 +20,34 @@ pip install cognis-rfsurvey
 rfsurvey scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+1. **Install** (Python 3.9+):
+
+   ```bash
+   pip install rfsurvey            # or: pipx install rfsurvey
+   ```
+
+2. **Analyze a spectrum sweep.** Point `analyze` at a sweep CSV (or `-` for stdin):
+
+   ```bash
+   rfsurvey analyze sweep.csv
+   ```
+
+3. **Tune detection.** Set how many dB above the estimated noise floor counts as occupied (`--squelch-offset`, default 10), the z-score threshold for power-spike anomalies (`--z-thresh`, default 6.0), and the persistence minimum (`--persist-sweeps`, default 3):
+
+   ```bash
+   rfsurvey analyze sweep.csv --squelch-offset 8 --z-thresh 5 --format json > spectrum.json
+   ```
+
+4. **Read the result.** The report lists occupied bins, persistent emitters, and power-spike anomalies. JSON mode emits structured records suited to time-series monitoring.
+
+5. **Gate in monitoring pipelines.** Use `--fail-on-anomaly` to exit non-zero whenever an anomaly is detected:
+
+   ```bash
+   rfsurvey analyze sweep.csv --fail-on-anomaly
+   ```
+
 ## Contents
 
 - [Why rfsurvey?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
