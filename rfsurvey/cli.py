@@ -60,7 +60,9 @@ def _render_table(report: SurveyReport) -> str:
     if not report.anomalies:
         lines.append("  none")
     else:
-        lines.append("%-10s %-22s %10s %8s  %s" % ("kind", "band", "freq", "power", "z/score"))
+        lines.append(
+            "%-10s %-22s %10s %8s  %s" % ("kind", "band", "freq", "power", "z/score")
+        )
         lines.append("-" * 78)
         for a in report.anomalies:
             lines.append(
@@ -80,9 +82,14 @@ def _read_input(path: str) -> str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog=TOOL_NAME,
-        description="Analyze RF spectrum-occupancy CSV for band usage, interference, and anomalies.",
+        description=(
+            "Analyze RF spectrum-occupancy CSV for band usage,"
+            " interference, and anomalies."
+        ),
     )
-    parser.add_argument("--version", action="version", version=f"{TOOL_NAME} {TOOL_VERSION}")
+    parser.add_argument(
+        "--version", action="version", version=f"{TOOL_NAME} {TOOL_VERSION}"
+    )
     parser.add_argument(
         "--format", choices=("table", "json"), default="table", help="output format"
     )
@@ -118,11 +125,28 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _validate_args(args: argparse.Namespace) -> Optional[str]:
+    """Return an error message string if CLI arguments are out of range, else None."""
+    import math as _math
+
+    if not _math.isfinite(args.squelch_offset):
+        return "--squelch-offset must be a finite number"
+    if not _math.isfinite(args.z_thresh) or args.z_thresh <= 0:
+        return "--z-thresh must be a positive finite number"
+    if args.persist_sweeps < 1:
+        return "--persist-sweeps must be >= 1"
+    return None
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
     if args.command == "analyze":
+        err = _validate_args(args)
+        if err:
+            print(f"{TOOL_NAME}: {err}", file=sys.stderr)
+            return 2
         try:
             text = _read_input(args.input)
         except OSError as exc:

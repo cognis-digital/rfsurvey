@@ -141,6 +141,8 @@ def load_samples(text: str) -> list[Sample]:
 
 
 def _median(values: list[float]) -> float:
+    if not values:
+        raise SurveyError("cannot compute median of an empty list")
     s = sorted(values)
     n = len(s)
     mid = n // 2
@@ -270,6 +272,12 @@ def analyze(
     persist_min_sweeps: int = 3,
 ) -> SurveyReport:
     """End-to-end: parse CSV -> noise floor -> band stats -> anomalies."""
+    if not math.isfinite(squelch_offset_db):
+        raise SurveyError("squelch_offset_db must be a finite number")
+    if not math.isfinite(z_thresh) or z_thresh <= 0:
+        raise SurveyError("z_thresh must be a positive finite number")
+    if persist_min_sweeps < 1:
+        raise SurveyError("persist_min_sweeps must be >= 1")
     samples = load_samples(text)
     noise_floor = estimate_noise_floor(samples)
     squelch = noise_floor + squelch_offset_db

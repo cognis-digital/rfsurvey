@@ -1,6 +1,10 @@
-"""RFSURVEY MCP server — exposes scan() as an MCP tool for Cognis.Studio."""
+"""RFSURVEY MCP server — exposes analyze() as an MCP tool for Cognis.Studio."""
 from __future__ import annotations
-from rfsurvey.core import scan, to_json
+
+import json
+
+from rfsurvey.core import SurveyError, analyze
+
 
 def serve() -> int:
     """Start an MCP stdio server. Requires the optional 'mcp' extra:
@@ -14,9 +18,16 @@ def serve() -> int:
     app = FastMCP("rfsurvey")
 
     @app.tool()
-    def rfsurvey_scan(target: str) -> str:
-        """Analyze RF spectrum-occupancy CSV/metadata for band usage, interference, and anomalies.. Returns JSON findings."""
-        return to_json(scan(target))
+    def rfsurvey_scan(csv_text: str) -> str:
+        """Analyze RF spectrum-occupancy CSV for band usage and anomalies.
+
+        Returns JSON findings, or a JSON error object on bad input.
+        """
+        try:
+            report = analyze(csv_text)
+            return json.dumps(report.to_dict())
+        except SurveyError as exc:
+            return json.dumps({"error": str(exc)})
 
     app.run()
     return 0
