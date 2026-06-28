@@ -1,0 +1,15 @@
+$ rfsurvey-emit --help
+
+usage: rfsurvey [-h] [--version] [--format {table,json}] {analyze} ...
+
+Analyze RF spectrum-occupancy CSV for band usage, interference, and anomalies.
+
+positional arguments:
+  {analyze}
+    analyze             analyze a spectrum sweep CSV (use '-' for stdin)
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+                        output format

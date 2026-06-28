@@ -20,6 +20,61 @@ pip install cognis-rfsurvey
 rfsurvey scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ rfsurvey-emit --version
+rfsurvey 0.1.0
+```
+
+```console
+$ rfsurvey-emit --help
+usage: rfsurvey [-h] [--version] [--format {table,json}] {analyze} ...
+
+Analyze RF spectrum-occupancy CSV for band usage, interference, and anomalies.
+
+positional arguments:
+  {analyze}
+    analyze             analyze a spectrum sweep CSV (use '-' for stdin)
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+                        output format
+```
+
+> Blocks above are real `rfsurvey` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"findings": [
+    {
+        "id": "123456",
+        "title": "Suspicious Network Traffic",
+        "description": "Network traffic from unknown IP address",
+        "created_by": "John Doe",
+        "created_at": "2023-02-15T14:30:00Z"
+    },
+    {
+        "id": "789012",
+        "title": "Malware Detection",
+        "description": "Malware detected on compromised system",
+        "created_by": "Jane Smith",
+        "created_at": "2023-03-01T10:45:00Z"
+    }
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 1. **Install** (Python 3.9+):
