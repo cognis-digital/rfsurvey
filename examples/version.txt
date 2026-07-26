@@ -1,3 +1,0 @@
-$ rfsurvey-emit --version
-
-rfsurvey 0.1.0

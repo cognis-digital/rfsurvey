@@ -1,247 +1,189 @@
-<a name="top"></a>
-<div align="center">
+# wavewatch
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=0:6b46c1,100:2b6cb0&height=120&section=header&text=RFSURVEY&fontSize=48&fontColor=ffffff&fontAlignY=58" width="100%" alt="RFSURVEY"/>
+**Offline RF signal reconnaissance and triage from capture files.**
 
-# RFSURVEY
+wavewatch detects, fingerprints, and classifies radio emitters from standard IQ
+and spectrum capture files, entirely offline, using a pure-Python DSP core. It
+turns a raw recording into reproducible, machine-readable findings — with a
+decision trace for every classification — so RF triage can drop into an
+automated analysis pipeline.
 
-### Analyze RF spectrum-occupancy CSV/metadata for band usage, interference, and anomalies.
-
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3500&pause=1000&color=6B46C1&center=true&vCenter=true&width=720&lines=Analyze+RF+spectrumoccupancy+CSVmetadata+for+band+usage+inte;Self-hostable+%C2%B7+MCP-native+%C2%B7+CI-ready+%C2%B7+polyglot" width="720"/>
-
-[![PyPI](https://img.shields.io/pypi/v/cognis-rfsurvey.svg?color=6b46c1)](https://pypi.org/project/cognis-rfsurvey/) [![CI](https://github.com/cognis-digital/rfsurvey/actions/workflows/ci.yml/badge.svg)](https://github.com/cognis-digital/rfsurvey/actions) [![License: COCL 1.0](https://img.shields.io/badge/License-COCL%201.0-2b6cb0.svg)](LICENSE) [![Suite](https://img.shields.io/badge/Cognis-Neural%20Suite-6b46c1.svg)](https://github.com/cognis-digital)
-
-*Part of the Cognis Neural Suite.*
-
-</div>
-
-```bash
-pip install cognis-rfsurvey
-rfsurvey scan .            # → prioritized findings in seconds
-```
-
-
-<!-- cognis:example:start -->
-## 🔎 Example output
-
-Real, reproducible output from the tool — runs offline:
-
-```console
-$ rfsurvey-emit --version
-rfsurvey 0.1.0
-```
-
-```console
-$ rfsurvey-emit --help
-usage: rfsurvey [-h] [--version] [--format {table,json}] {analyze} ...
-
-Analyze RF spectrum-occupancy CSV for band usage, interference, and anomalies.
-
-positional arguments:
-  {analyze}
-    analyze             analyze a spectrum sweep CSV (use '-' for stdin)
-
-options:
-  -h, --help            show this help message and exit
-  --version             show program's version number and exit
-  --format {table,json}
-                        output format
-```
-
-> Blocks above are real `rfsurvey` output — reproduce them from a clone.
-
-**Sample result format** _(illustrative values — run on your own data for real findings):_
-
-```
-{
-"findings": [
-    {
-        "id": "123456",
-        "title": "Suspicious Network Traffic",
-        "description": "Network traffic from unknown IP address",
-        "created_by": "John Doe",
-        "created_at": "2023-02-15T14:30:00Z"
-    },
-    {
-        "id": "789012",
-        "title": "Malware Detection",
-        "description": "Malware detected on compromised system",
-        "created_by": "Jane Smith",
-        "created_at": "2023-03-01T10:45:00Z"
-    }
-]
-}
-```
-
-<!-- cognis:example:end -->
-
-## Usage — step by step
-
-1. **Install** (Python 3.9+):
-
-   ```bash
-   pip install rfsurvey            # or: pipx install rfsurvey
-   ```
-
-2. **Analyze a spectrum sweep.** Point `analyze` at a sweep CSV (or `-` for stdin):
-
-   ```bash
-   rfsurvey analyze sweep.csv
-   ```
-
-3. **Tune detection.** Set how many dB above the estimated noise floor counts as occupied (`--squelch-offset`, default 10), the z-score threshold for power-spike anomalies (`--z-thresh`, default 6.0), and the persistence minimum (`--persist-sweeps`, default 3):
-
-   ```bash
-   rfsurvey analyze sweep.csv --squelch-offset 8 --z-thresh 5 --format json > spectrum.json
-   ```
-
-4. **Read the result.** The report lists occupied bins, persistent emitters, and power-spike anomalies. JSON mode emits structured records suited to time-series monitoring.
-
-5. **Gate in monitoring pipelines.** Use `--fail-on-anomaly` to exit non-zero whenever an anomaly is detected:
-
-   ```bash
-   rfsurvey analyze sweep.csv --fail-on-anomaly
-   ```
-
-## Contents
-
-- [Why rfsurvey?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
-
-<a name="why"></a>
-## Why rfsurvey?
-
-Analyze RF spectrum-occupancy CSV/metadata for band usage, interference, and anomalies. — without standing up heavyweight infrastructure.
-
-`rfsurvey` is single-purpose, scriptable, and self-hostable: point it at a target, get prioritized results in the format your workflow already speaks (table · JSON · SARIF), gate CI on it, and let agents drive it over MCP.
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="features"></a>
-## Features
-
-- ✅ Load Samples
-- ✅ Estimate Noise Floor
-- ✅ Summarize Bands
-- ✅ Detect Anomalies
-- ✅ Analyze
-- ✅ Runs on Linux/macOS/Windows · Docker · devcontainer
-- ✅ Ports in Python, JavaScript, Go, and Rust (`ports/`)
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="quick-start"></a>
-## Quick start
-
-```bash
-pip install cognis-rfsurvey
-rfsurvey --version
-rfsurvey scan .                       # scan current project
-rfsurvey scan . --format json         # machine-readable
-rfsurvey scan . --fail-on high        # CI gate (non-zero exit)
-```
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="example"></a>
-## Example
-
-```text
-$ rfsurvey scan .
-  [HIGH    ] RFS-001  example finding             (./src/app.py)
-  [MEDIUM  ] RFS-002  another signal              (./config.yaml)
-
-  2 findings · risk score 5 · 38ms
-```
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="architecture"></a>
-## Architecture
-
-```mermaid
-flowchart LR
-  IN[input] --> P[rfsurvey<br/>analyze + score]
-  P --> OUT[report]
-```
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="ai-stack"></a>
-## Use it from any AI stack
-
-`rfsurvey` is interoperable with every popular way of using AI:
-
-- **MCP server** — `rfsurvey mcp` (Claude Desktop, Cursor, Cognis.Studio, [uncensored-fleet](https://github.com/cognis-digital/uncensored-fleet))
-- **OpenAI-compatible / JSON** — pipe `rfsurvey scan . --format json` into any agent or LLM
-- **LangChain · CrewAI · AutoGen · LlamaIndex** — wrap the CLI/JSON as a tool in one line
-- **CI / scripts** — exit codes + SARIF for non-AI pipelines
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="how-it-compares"></a>
-## How it compares
-
-| | **Cognis rfsurvey** | typical tools |
-|---|:---:|:---:|
-| Self-hostable, no account | ✅ | varies |
-| Single command, zero config | ✅ | ⚠️ |
-| JSON + SARIF for CI | ✅ | varies |
-| MCP-native (AI agents) | ✅ | ❌ |
-| Polyglot ports (JS/Go/Rust) | ✅ | ❌ |
-| Open license | ✅ COCL | varies |
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="integrations"></a>
-## Integrations
-
-Pipes into your stack: **SARIF** for code-scanning, **JSON** for anything, an **MCP server** (`rfsurvey mcp`) for AI agents, and a webhook forwarder for SIEM/Slack/Jira. See [`docs/INTEGRATIONS.md`](docs/INTEGRATIONS.md).
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="install-anywhere"></a>
-## Install — every way, every platform
-
-```bash
-pip install "git+https://github.com/cognis-digital/rfsurvey.git"    # pip (works today)
-pipx install "git+https://github.com/cognis-digital/rfsurvey.git"   # isolated CLI
-uv tool install "git+https://github.com/cognis-digital/rfsurvey.git" # uv
-pip install cognis-rfsurvey                                          # PyPI (when published)
-docker run --rm ghcr.io/cognis-digital/rfsurvey:latest --help        # Docker
-brew install cognis-digital/tap/rfsurvey                             # Homebrew tap
-curl -fsSL https://raw.githubusercontent.com/cognis-digital/rfsurvey/main/install.sh | sh
-```
-
-| Linux | macOS | Windows | Docker | Cloud |
-|---|---|---|---|---|
-| `scripts/setup-linux.sh` | `scripts/setup-macos.sh` | `scripts/setup-windows.ps1` | `docker run ghcr.io/cognis-digital/rfsurvey` | [DEPLOY.md](docs/DEPLOY.md) (AWS/Azure/GCP/k8s) |
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="related"></a>
-## Related Cognis tools
-
-
-**Explore the suite →** [🗂️ all 170+ tools](https://github.com/cognis-digital/cognis-neural-suite) · [⭐ awesome-cognis](https://github.com/cognis-digital/awesome-cognis) · [🔗 cognis-sources](https://github.com/cognis-digital/cognis-sources) · [🤖 uncensored-fleet](https://github.com/cognis-digital/uncensored-fleet) · [🧠 engram](https://github.com/cognis-digital/engram)
-
-<div align="right"><a href="#top">↑ back to top</a></div>
-
-<a name="contributing"></a>
-## Contributing
-
-PRs, new rules, and demo scenarios are welcome under the collaboration-pull model — see [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
-
-> ### ⭐ If `rfsurvey` saved you time, **star it** — it genuinely helps others find it.
-
-## Interoperability
-
-`{}` composes with the 300+ tool Cognis suite — JSON in/out and a shared
-OpenAI-compatible `/v1` backbone. See **[INTEROP.md](INTEROP.md)** for the
-suite map, composition patterns, and reference stacks.
-
-## License
-
-Source-available under the **Cognis Open Collaboration License (COCL) v1.0** — free for personal, internal-evaluation, research, and educational use; **commercial / production use requires a license** (licensing@cognis.digital). See [LICENSE](LICENSE).
+A Cognis Digital tool.
 
 ---
 
-<div align="center"><sub><b><a href="https://cognis.digital">Cognis Digital</a></b> · one of 170+ tools in the <a href="https://github.com/cognis-digital/cognis-neural-suite">Cognis Neural Suite</a> · <i>Making Tomorrow Better Today</i></sub></div>
+## Scope: defensive, lawful-by-design
+
+wavewatch is **analysis only**. It reads capture files and reports what it sees.
+
+- **No transmit path.** Nothing in this package emits RF.
+- **No jamming or countermeasures.** Interference detectors flag the *signature*
+  of sweep/barrage jamming and GNSS spoofing so an analyst can triage a link's
+  health — they never generate or counter a signal.
+- **No payload demodulation.** Emitters are labelled by their *stability and
+  cyclostationary signatures*, not by decoding their contents. This is a
+  deliberate privacy- and lawful-by-design choice.
+- **No weaponization.** There is no targeting, guidance, or control capability.
+
+These boundaries are enforced by the test suite (`tests/test_defensive_scope.py`),
+so a change that adds an offensive capability fails CI.
+
+Operate wavewatch only on signals you are authorized to record and analyze, in
+accordance with applicable law and spectrum regulations.
+
+---
+
+## Highlights
+
+- **Zero third-party runtime dependencies.** Python 3.11+ standard library only.
+  The FFT (radix-2 Cooley–Tukey + Bluestein for arbitrary lengths), PSD (Welch),
+  spectrogram, and the annotated-spectrogram **PNG encoder** (`zlib` + `struct`)
+  are all implemented from scratch. No NumPy, SciPy, PIL, or matplotlib.
+- **Works without SDR hardware.** Reads **SigMF**, **WAV-IQ**, and **CSV
+  power-spectra**. A built-in synthetic-signal generator means tests and demos
+  need no external data.
+- **Emitter detection.** CFAR / energy band detection, burst segmentation, and
+  frequency-hopping grouping.
+- **Fingerprint & classify.** Phase-jitter, frequency-stability, spectral
+  flatness, and cyclostationary features label a likely class
+  (`drone-link` / `wifi` / `ble` / `gnss` / `unknown`) with a confidence score —
+  without decoding any payload.
+- **Interference flags.** Sweep- and barrage-jamming signatures and GNSS-spoofing
+  hints (interoperates with `spoofwatch`).
+- **Reproducible decisions.** Every classification carries its features,
+  thresholds, and a step-by-step decision trace.
+- **Outputs.** JSON, SARIF-style findings, GeoJSON (when position metadata is
+  present), and an annotated spectrogram PNG.
+- **MCP server.** A self-contained JSON-RPC/stdio MCP server exposes an
+  `analyze_capture` tool for agent pipelines.
+
+---
+
+## Install
+
+```bash
+pip install .
+# or run straight from a checkout, no install required:
+python -m wavewatch --help
+```
+
+Requires Python 3.11+. `pytest` is only needed to run the tests.
+
+---
+
+## Quickstart
+
+Analyze a synthetic scenario (no capture file needed) and write every output:
+
+```bash
+python -m wavewatch analyze --scenario drone-link \
+    --json out/report.json --sarif out/findings.sarif \
+    --geojson out/emitters.geojson --png out/spectrogram.png
+```
+
+Analyze a real capture file (format is auto-detected by extension):
+
+```bash
+python -m wavewatch analyze capture.sigmf-meta --json -
+python -m wavewatch analyze recording.wav --png spec.png
+python -m wavewatch analyze spectrum.csv --json report.json
+```
+
+Generate a synthetic capture to disk (SigMF or WAV-IQ):
+
+```bash
+python -m wavewatch generate wifi --out samples/wifi        # SigMF
+python -m wavewatch generate ble  --out samples/ble.wav     # WAV-IQ
+```
+
+Available scenarios: `noise`, `tone`, `wifi`, `drone-link`, `ble`, `gnss`,
+`sweep`, `barrage`.
+
+---
+
+## Library usage
+
+```python
+from wavewatch import analyze_capture, load_capture, generate
+
+capture, _ = generate("drone-link")          # or: load_capture("capture.sigmf-meta")
+report = analyze_capture(capture)
+
+print(report.summary())
+for e in report.emitters:
+    emitter = e.emitter
+    cls = e.classification
+    print(emitter["rf_center_hz"], cls["label"], cls["confidence"])
+    for step in cls["decision_trace"]:
+        print("  ", step)
+```
+
+---
+
+## MCP server
+
+Run the stdio MCP server and call the `analyze_capture` tool from an agent:
+
+```bash
+python -m wavewatch serve-mcp
+```
+
+The server implements `initialize`, `tools/list`, and `tools/call` over
+JSON-RPC 2.0 (one JSON message per line). `analyze_capture` accepts either a
+capture `path` or a synthetic `scenario`, and returns structured findings as
+JSON or SARIF.
+
+---
+
+## How it works
+
+1. **Ingest** — a capture is read into an in-memory `Capture` (IQ samples or a
+   pre-computed spectrum) with sample rate, center frequency, and optional
+   geolocation.
+2. **Transform** — a Welch PSD and an STFT spectrogram are computed with the
+   pure-Python DSP core.
+3. **Detect** — CFAR-style band detection segments occupied spectrum; per-band
+   burst segmentation measures temporal activity; narrowband, bursty channels
+   scattered across the band are grouped into a single frequency-hopping emitter.
+4. **Fingerprint** — for each emitter, stability and structure features are
+   measured on the raw samples (phase jitter, frequency stability, spectral
+   flatness, cyclostationary strength) — never the payload.
+5. **Classify** — interpretable membership rules score each class; the highest
+   score wins, and the features, thresholds, and reasoning are recorded as a
+   decision trace.
+6. **Flag & report** — interference detectors add jamming/spoofing flags, and
+   results are emitted as JSON / SARIF / GeoJSON / annotated PNG.
+
+---
+
+## Capture formats
+
+| Format         | Read | Write | Notes                                                    |
+| -------------- | :--: | :---: | -------------------------------------------------------- |
+| SigMF          |  ✓   |   ✓   | `cf32`, `cf64`, `ci16`, `ci8`, `cu8` (+ real variants)   |
+| WAV-IQ         |  ✓   |   ✓   | 2-channel (I=left, Q=right), 16-bit PCM or 32-bit float  |
+| CSV spectrum   |  ✓   |   ✓   | `frequency,power` rows, or a single power column         |
+
+A receive-only live-capture adapter *interface* is provided
+(`wavewatch.io.live.LiveCaptureAdapter`) for out-of-tree SDR backends. The core
+ships no hardware driver and remains file-based and offline. There is,
+deliberately, no transmit method.
+
+---
+
+## Tests
+
+```bash
+python -m pytest -q
+```
+
+The suite covers FFT correctness against direct DFTs, PSD/spectrogram behavior,
+each detector and classifier path, every reader/writer, PNG-encoder validity,
+the MCP server and CLI, edge cases (empty / DC-only / pure-noise / clipped
+captures), and the defensive-scope guardrails.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).

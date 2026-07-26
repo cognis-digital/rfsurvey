@@ -1,8 +1,36 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 *.egg-info/
-.venv/
-dist/
+.eggs/
 build/
+dist/
+.installed.cfg
+*.egg
+
+# Test / coverage
 .pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
 .DS_Store
+Thumbs.db
+
+# wavewatch outputs / working artifacts
+*.png
+*.sigmf-data
+*.sigmf-meta
+out/
+scratch/

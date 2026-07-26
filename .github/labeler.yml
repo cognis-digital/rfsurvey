@@ -1,4 +1,0 @@
-docs: ['**/*.md']
-tests: ['tests/**']
-ci: ['.github/**']
-ports: ['ports/**']
